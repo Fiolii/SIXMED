@@ -205,7 +205,7 @@ const UNIDECO = {
   tu: (I, E) => `<div class="uk-mast"><span>เล่มที่ ${thNum((String(E.born).match(/\d{4}/) || ['๐'])[0])}</span><i></i><span>ฉบับพิเศษ</span><i></i><span>ราคา ความรู้</span></div>`,
   kmutt: () => `<div class="uk-tb"><span>DWG NO. ๐๑</span><span>SCALE 1:1</span><span>REV. A</span></div>`,
   kmitl: () => `<div class="uk-term"><span>&gt;</span> boot --university <b>kmitl</b><i></i></div>`,
-  mu: () => `<div class="uk-chart"><span>แฟ้มประวัติ</span><span>แผนก: วิศวกรรมศาสตร์</span><span class="ok">● สถานะ: ปกติ</span></div>`,
+  mu: () => `<div class="uk-chart"><span>แฟ้มประวัติ</span><span>แผนก: แพทยศาสตร์</span><span class="ok">● สถานะ: ปกติ</span></div>`,
   kmutnb: (I, E) => `<div class="uk-est" aria-hidden="true">${thNum((String(E.born).match(/\d{4}/) || [''])[0])}</div>`,
 };
 

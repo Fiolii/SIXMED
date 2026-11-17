@@ -69,9 +69,9 @@ const brScene = (b, still) => { if (!b) return ''; let s = b.scene(b.c[0], b.c[1
 /* การ์ดสาขาบนหน้าแรก */
 function branchCard() {
   const b = brCur();
-  if (!b) return `<div class="card brcard"><div class="row between" style="gap:12px"><div style="min-width:0"><b>${brIcon(null, 18)} เลือกสาขาวิศวะที่สนใจ</b><div class="mute" style="font-size:13px">โยธา เครื่องกล ไฟฟ้า คอมพิวเตอร์ เคมี และอีกหลายสาขา — ได้ธีมสาขา ฉากที่ขยับ และคำแนะนำว่าควรอ่านอะไร</div></div><button class="pri" data-a="branchOpen">เลือก</button></div></div>`;
-  return `<div class="card brcard on" style="--br1:${b.c[0]};--br2:${b.c[1]}"><div class="row" style="gap:12px;flex-wrap:nowrap"><div class="brico">${brIcon(b, 34, b.c[0])}</div><div style="flex:1;min-width:0"><b>วิศวกรรม${esc(b.n)}</b><div class="mute" style="font-size:13px">${esc(b.tag)}</div></div></div>
-    <div class="row" style="margin-top:10px"><button class="pri" data-a="branchOpen">ดูสาขานี้</button><button data-a="branchOpen">เปลี่ยนสาขา</button></div></div>`;
+  if (!b) return `<div class="card brcard"><div class="row between" style="gap:12px"><div style="min-width:0"><b>${brIcon(null, 18)} เลือกคณะสายแพทย์ที่สนใจ</b><div class="mute" style="font-size:13px">แพทย์ ทันตแพทย์ เภสัช สัตวแพทย์ — ได้ธีมคณะ ฉากที่ขยับ และคำแนะนำว่าควรอ่านอะไร</div></div><button class="pri" data-a="branchOpen">เลือก</button></div></div>`;
+  return `<div class="card brcard on" style="--br1:${b.c[0]};--br2:${b.c[1]}"><div class="row" style="gap:12px;flex-wrap:nowrap"><div class="brico">${brIcon(b, 34, b.c[0])}</div><div style="flex:1;min-width:0"><b>คณะ${esc(b.n)}</b><div class="mute" style="font-size:13px">${esc(b.tag)}</div></div></div>
+    <div class="row" style="margin-top:10px"><button class="pri" data-a="branchOpen">ดูคณะนี้</button><button data-a="branchOpen">เปลี่ยนคณะ</button></div></div>`;
 }
 function branchSheet(open, focus) {
   let el = document.getElementById('brsheet'); if (el) el.remove(); if (!open) return;
@@ -79,21 +79,21 @@ function branchSheet(open, focus) {
   const tile = b => `<button class="swatch brsw ${cur === b.id ? 'on' : ''} ${focus === b.id ? 'look' : ''}" data-a="branchLook" data-v="${b.id}" style="--s1:${b.c[0]};--s2:${b.c[1]}"><i>${brIcon(b, 26, b.c[0])}</i><span><b>${esc(b.n)}</b><small>${esc(b.en)}</small></span>${cur === b.id ? '<em>✓</em>' : ''}</button>`;
   el = document.createElement('div'); el.id = 'brsheet'; el.className = 'omr'; el.setAttribute('data-a', 'branchClose');
   const topicBtns = b => b.topics.filter(k => typeof hasLesson === 'function' && hasLesson(k)).map(k => `<button class="chip" data-a="branchRead" data-v="${esc(k)}">📚 ${esc(k)}</button>`).join('');
-  el.innerHTML = `<div><div class="row between"><h2 style="margin:0">${brIcon(null, 22)} ธีมสาขาวิศวะ</h2><button data-a="branchClose">ปิด</button></div>
-    <p class="mute" style="margin:6px 0">เลือกสาขาที่สนใจ แล้วทุกหน้าของแอปจะมีสีเสริม ไอคอนหน้าการ์ด และฉากพื้นหลังที่ขยับตามสาขานั้น — ใช้ซ้อนกับธีมมหาวิทยาลัยได้</p>
-    ${sel ? `<div class="brinfo" style="--br1:${sel.c[0]};--br2:${sel.c[1]}"><div class="brscene" aria-hidden="true">${brScene(sel)}</div><div class="brinfob"><div class="brh">${brIcon(sel, 30, sel.c[0])}<b>วิศวกรรม${esc(sel.n)}</b></div><div class="mute">${esc(sel.tag)}</div>
+  el.innerHTML = `<div><div class="row between"><h2 style="margin:0">${brIcon(null, 22)} ธีมคณะสายแพทย์</h2><button data-a="branchClose">ปิด</button></div>
+    <p class="mute" style="margin:6px 0">เลือกคณะที่สนใจ แล้วทุกหน้าของแอปจะมีสีเสริม ไอคอนหน้าการ์ด และฉากพื้นหลังที่ขยับตามคณะนั้น — ใช้ซ้อนกับธีมมหาวิทยาลัยได้</p>
+    ${sel ? `<div class="brinfo" style="--br1:${sel.c[0]};--br2:${sel.c[1]}"><div class="brscene" aria-hidden="true">${brScene(sel)}</div><div class="brinfob"><div class="brh">${brIcon(sel, 30, sel.c[0])}<b>คณะ${esc(sel.n)}</b></div><div class="mute">${esc(sel.tag)}</div>
       <p><b>เรียนอะไร:</b> ${esc(sel.study)}</p><p><b>จบไปทำอะไร:</b> ${sel.jobs.map(esc).join(' · ')}</p>
       <div class="chips" style="margin:4px 0 8px">${topicBtns(sel)}</div>
-      <div class="row"><button class="pri" data-a="branchPick" data-v="${sel.id}">${cur === sel.id ? '✓ ใช้ธีมนี้อยู่' : 'ใช้ธีมสาขานี้'}</button>${cur ? '<button data-a="branchPick" data-v="">ไม่ใช้ธีมสาขา</button>' : ''}</div></div></div>` : ''}
+      <div class="row"><button class="pri" data-a="branchPick" data-v="${sel.id}">${cur === sel.id ? '✓ ใช้ธีมนี้อยู่' : 'ใช้ธีมคณะนี้'}</button>${cur ? '<button data-a="branchPick" data-v="">ไม่ใช้ธีมคณะ</button>' : ''}</div></div></div>` : ''}
     <div class="swgrid">${BRANCH.map(tile).join('')}</div>
-    <p class="mute" style="font-size:12px;margin-top:10px">สรุปแบบกว้าง ๆ เพื่อให้เห็นภาพ — ชื่อสาขาและหลักสูตรจริงของแต่ละมหาวิทยาลัยต่างกัน (เช่น บางที่รวมเมคคาทรอนิกส์ไว้กับเครื่องกลหรือไฟฟ้า) ก่อนตัดสินใจให้เช็กกับเว็บคณะและ mytcas.com ภาพประกอบวาดเองทั้งหมด</p></div>`;
+    <p class="mute" style="font-size:12px;margin-top:10px">สรุปแบบกว้าง ๆ เพื่อให้เห็นภาพ — หลักสูตรจริงของแต่ละมหาวิทยาลัยต่างกัน และบางคณะ (เช่น สัตวแพทย์) ไม่ได้ใช้คะแนน TPAT1 ในทุกที่ ก่อนตัดสินใจให้เช็กกับเว็บคณะและ mytcas.com ภาพประกอบวาดเองทั้งหมด</p></div>`;
   document.body.appendChild(el);
 }
 const BRANCH_ACT = {
   branchOpen() { themeSheet(false); uniPage(null); branchSheet(true); },
   branchClose() { branchSheet(false); },
   branchLook(v) { branchSheet(true, v); },
-  branchPick(v) { store.set('branch', v || ''); dressApply(); branchSheet(true, v || ''); render(true); toast(v ? 'ใช้ธีมสาขา' + (BRANCH.find(b => b.id === v) || {}).n + ' แล้ว' : 'ปิดธีมสาขาแล้ว'); },
+  branchPick(v) { store.set('branch', v || ''); dressApply(); branchSheet(true, v || ''); render(true); toast(v ? 'ใช้ธีมคณะ' + (BRANCH.find(b => b.id === v) || {}).n + ' แล้ว' : 'ปิดธีมคณะแล้ว'); },
   branchRead(v) { branchSheet(false); ACT.openLesson(v); },
   fxPick(v) { store.set('fx', v); dressApply(); render(true); const s = document.getElementById('themesheet'); if (s) themeSheet(true); },
 };
