@@ -1,9 +1,9 @@
 // ระบบโปรไฟล์ "บัตรนักเรียนเตรียมแพทย์": ตัวตน + เป้าหมาย + สถิติ + จุดแข็ง/จุดอ่อน + ตราที่ได้ + การ์ดแชร์เป็นรูป
 // เก็บใน sx_profile (เฉพาะในเครื่อง ไม่ส่งขึ้นเซิร์ฟเวอร์) · ใช้ข้อมูลเดิมของแอป: attempts studies mocks streak() xpNow() shirtInfo() ธีมมหาวิทยาลัย สาขา และวันสอบ
-const PROF_EMOJI = ['⚙️', '🔧', '🚀', '🧪', '💡', '🧠', '📐', '🤖', '⚡', '🛠️', '🌱', '🔥'];
+const PROF_EMOJI = ['🩺', '💉', '💊', '🧬', '🧪', '🫀', '🧠', '🦷', '🐾', '📚', '🌱', '🔥'];
 const PROF_COLORS = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#0ea5e9', '#8b5cf6', '#ef4444', '#14b8a6'];
 const PROF_GRADES = ['ม.4', 'ม.5', 'ม.6', 'จบ ม.6 แล้ว', 'อื่น ๆ'];
-const profGet = () => Object.assign({ bio: '', grade: '', color: PROF_COLORS[0], emoji: '⚙️', goal: 80 }, store.get('profile', {}));
+const profGet = () => Object.assign({ bio: '', grade: '', color: PROF_COLORS[0], emoji: '🩺', goal: 80 }, store.get('profile', {}));
 const profSet = (k, v) => { const p = store.get('profile', {}); p[k] = v; store.set('profile', p); };
 
 /* ป้ายโปรไฟล์ (ใช้แทนตัวละครระหว่างปิดฟีเจอร์ตัวละคร): วงกลมสีไล่เฉด + อักษรย่อ + สติกเกอร์อีโมจิ */
@@ -31,11 +31,13 @@ function viewProfile() {
       <div class="pf-xp"><div class="pf-xpbar"><i style="width:${d.prog}%"></i></div><small class="mute">${d.nxt ? `อีก ${(d.nxt[0] - d.xp).toLocaleString('th-TH')} แต้มถึง “${esc(d.nxt[1])}”` : 'ถึงระดับสูงสุดแล้ว 🎉'}</small></div>
       <div class="row" style="gap:8px;margin-top:10px"><button class="pri" data-a="profShare">📸 สร้างการ์ดแชร์</button><button data-a="profCopy">📋 คัดลอกข้อความ</button></div></div>
 
+    ${typeof shirtCard === 'function' ? shirtCard() : ''}
+
     ${typeof acctCard === 'function' ? acctCard() : ''}
 
     <div class="card"><h2>🎯 เป้าหมายของฉัน</h2>
       <div class="pf-goals"><div class="pf-g"><small class="mute">มหาวิทยาลัยที่อยากเข้า</small><b>${esc(d.uni)}</b><button class="chip" data-a="themeOpen">เลือก/เปลี่ยน</button></div>
-        <div class="pf-g"><small class="mute">สาขาที่สนใจ</small><b>${br ? esc(br.n || br.t || br.id) : 'ยังไม่ได้เลือก'}</b><button class="chip" data-a="branchOpen">เลือก/เปลี่ยน</button></div>
+        <div class="pf-g"><small class="mute">คณะที่สนใจ</small><b>${br ? 'คณะ' + esc(br.n || br.t || br.id) : 'ยังไม่ได้เลือก'}</b><button class="chip" data-a="branchOpen">เลือก/เปลี่ยน</button></div>
         <div class="pf-g"><small class="mute">วันสอบที่ตั้งไว้</small><b>${examDate ? (d.dleft >= 0 ? 'อีก ' + d.dleft + ' วัน' : 'ผ่านมาแล้ว') + ' <small class="mute">(' + examDate + ')</small>' : 'ยังไม่ได้ตั้ง'}</b><a class="chip" href="#/stats">ตั้งที่หน้าสถิติ</a></div></div>
       <p class="mute" style="margin:12px 0 4px">ชั้นปีตอนนี้</p>${chipRow(PROF_GRADES, 'grade', p.grade)}
       <p class="mute" style="margin:12px 0 2px">เป้าความแม่นยำ: <b style="color:var(--ink)">${p.goal}%</b></p><input type="range" min="50" max="100" step="5" value="${p.goal}" data-prof="goal" aria-label="เป้าความแม่นยำ" style="width:100%">

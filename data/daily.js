@@ -87,13 +87,13 @@ function dailyCard() {
 /* ---------- เสื้อกาวน์ ---------- */
 function xpBase() { return attempts.length + Math.round(studies.reduce((a, s) => a + s.secs, 0) / 600); }
 function xpNow() { return Math.max(0, xpBase() + store.get('xpBonus', 0)); } // 1 ข้อ = 1 แต้ม, อ่าน 10 นาที = 1 แต้ม
-const ALLP = [['⚙️', 'ทำครบ 10 ข้อ'], ['🔧', 'ทำครบ 100 ข้อ'], ['🔌', 'อ่านต่อเนื่อง 3 วัน'], ['🔥', 'อ่านต่อเนื่อง 7 วัน'], ['📐', 'ทำสอบจำลองแล้ว'], ['🎯', 'ภารกิจครบ 5 วัน'], ['📚', 'อ่านครบ 10 บท']];
+const ALLP = [['🩺', 'ทำครบ 10 ข้อ'], ['💉', 'ทำครบ 100 ข้อ'], ['💊', 'อ่านต่อเนื่อง 3 วัน'], ['🔥', 'อ่านต่อเนื่อง 7 วัน'], ['📝', 'ทำสอบจำลองแล้ว'], ['🎯', 'ภารกิจครบ 5 วัน'], ['📚', 'อ่านครบ 10 บท']];
 function shirtInfo() {
   const xp = xpNow(), idx = TITLES.map(t => t[0]).filter(v => xp >= v).length - 1, next = TITLES[idx + 1];
   const patches = [], dl = store.get('dlog', {}), daysDone = Object.values(dl).filter(x => x.done >= x.total && x.total > 0).length + (Object.keys(getDaily().results).length >= getDaily().ids.length ? 1 : 0);
-  if (attempts.length >= 10) patches.push(['⚙️', 'ทำครบ 10 ข้อ']); if (attempts.length >= 100) patches.push(['🔧', 'ทำครบ 100 ข้อ']);
-  if (streak() >= 3) patches.push(['🔌', 'อ่านต่อเนื่อง 3 วัน']); if (streak() >= 7) patches.push(['🔥', 'อ่านต่อเนื่อง 7 วัน']);
-  if (mocks.length) patches.push(['📐', 'ทำสอบจำลองแล้ว']); if (daysDone >= 5) patches.push(['🎯', 'ภารกิจครบ 5 วัน']);
+  if (attempts.length >= 10) patches.push(['🩺', 'ทำครบ 10 ข้อ']); if (attempts.length >= 100) patches.push(['💉', 'ทำครบ 100 ข้อ']);
+  if (streak() >= 3) patches.push(['💊', 'อ่านต่อเนื่อง 3 วัน']); if (streak() >= 7) patches.push(['🔥', 'อ่านต่อเนื่อง 7 วัน']);
+  if (mocks.length) patches.push(['📝', 'ทำสอบจำลองแล้ว']); if (daysDone >= 5) patches.push(['🎯', 'ภารกิจครบ 5 วัน']);
   if (Object.keys(readLog()).length >= 10) patches.push(['📚', 'อ่านครบ 10 บท']);
   if (store.get('allPatches', false)) ALLP.forEach(p => { if (!patches.some(x => x[0] === p[0])) patches.push(p); });
   return { xp, title: TITLES[idx][1], next, patches };
@@ -111,7 +111,7 @@ function shirtCard() {
     ${curThemeId() !== 'sixent' ? `<div class="unimotto">“${esc(uniOf(curThemeId()).motto)}”</div>` : ''}
     <div class="bar" style="margin:8px 0 4px"><i style="width:${pct_}%"></i></div><div class="mute" style="font-size:12px">${si.next ? 'อีก ' + (si.next[0] - si.xp) + ' แต้ม (ข้อที่ทำ + เวลาอ่าน) → ' + si.next[1] : 'ระดับสูงสุดแล้ว 🎓'}</div>
     ${av ? `<div class="row mini"><a class="btn" href="#/me" data-a="avOpen" data-v="dress">👕 แต่งตัว</a><a class="btn" href="#/me" data-a="avOpen" data-v="shop">🛍 ร้านค้า</a></div>` : ''}
-    <div class="patches">${si.patches.length ? si.patches.map(p => `<span title="${esc(p[1])}">${p[0]}</span>`).join('') : '<span class="mute" style="font-size:12px">ทำโจทย์เพื่อสะสมแพทช์ติดเสื้อ</span>'}</div></div></div>`;
+    <div class="patches">${si.patches.length ? si.patches.map(p => `<span title="${esc(p[1])}">${p[0]}</span>`).join('') : '<span class="mute" style="font-size:12px">ทำโจทย์เพื่อสะสมเข็มกลัดติดเสื้อกาวน์</span>'}</div></div></div>`;
 }
 let logoTaps = 0, logoTimer = 0;
 function easterEgg() {
