@@ -11,7 +11,7 @@ let AVC = 0;
 const avMix = (h, t, a) => { const p = s => { if (s.length === 4) s = '#' + s[1] + s[1] + s[2] + s[2] + s[3] + s[3]; return [1, 3, 5].map(i => parseInt(s.slice(i, i + 2), 16)); }, x = p(h), y = p(t); return '#' + x.map((v, i) => Math.round(v + (y[i] - v) * a).toString(16).padStart(2, '0')).join(''); };
 const avUniCol = id => { const t = (typeof THEMES !== 'undefined' && THEMES.find(x => x.id === id)) || { pl: '#4f46e5' }; return t.pl; };
 
-/* ---------- เสื้อทั่วไป (พิกัดเดียวกับเสื้อช็อป 120×130 แล้วเลื่อนไป 40,96) ---------- */
+/* ---------- เสื้อทั่วไป (พิกัดเดียวกับเสื้อกาวน์ 120×130 แล้วเลื่อนไป 40,96) ---------- */
 const AV_LS = 'M44 8L16 22L2 52L22 62L30 50L30 120L90 120L90 50L98 62L118 52L104 22L76 8Q60 28 44 8Z';
 const AV_SS = 'M44 8L16 22L6 42L24 50L30 42L30 120L90 120L90 42L96 50L114 42L104 22L76 8Q60 28 44 8Z';
 const AV_SSV = 'M44 8L16 22L6 42L24 50L30 42L30 120L90 120L90 42L96 50L114 42L104 22L76 8L60 40Z';

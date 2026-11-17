@@ -300,7 +300,7 @@ function submitExam(auto) {
 function examResult() {
   const n = E.list.length, p = pct(E.score, n), by = {};
   E.list.forEach((q, i) => { const t = by[q.topic] ||= { n: 0, ok: 0 }; t.n++; if (isRight(q, E.ans[i])) t.ok++; });
-  const msg = p >= 80 ? 'เยี่ยมมาก! เสื้อช็อปตัวนี้คู่ควรแล้ว 🎉' : p >= 60 ? 'ดีเลย ค่า error เริ่มเข้าพิกัดเผื่อแล้ว 💪' : 'ไม่เป็นไร นี่คือต้นแบบรุ่นที่ 1 — ทบทวนจุดที่พลาดแล้วลองใหม่ 📚';
+  const msg = p >= 80 ? 'เยี่ยมมาก! เสื้อกาวน์ตัวนี้คู่ควรแล้ว 🎉' : p >= 60 ? 'ดีเลย ค่า error เริ่มเข้าพิกัดเผื่อแล้ว 💪' : 'ไม่เป็นไร นี่คือต้นแบบรุ่นที่ 1 — ทบทวนจุดที่พลาดแล้วลองใหม่ 📚';
   setTimeout(() => { const f = document.querySelector('.ring-fg'); if (f) f.style.strokeDashoffset = 2 * Math.PI * 52 * (1 - p / 100); }, 60);
   return `<h1>ผลการสอบ ${E.auto ? '<span class="tag warn">หมดเวลา ส่งอัตโนมัติ</span>' : ''}</h1>
   <div class="card ctr">${ring(0, 170, E.score + '/' + n, p + '%')}<p style="margin:10px 0 2px"><b>${msg}</b></p>${E.daily ? `<p class="mute" style="margin:2px 0">ภารกิจรายวัน: ทำแล้ว ${Object.keys(getDaily().results).length}/${getDaily().ids.length} ข้อ${missionStreak() ? ' · 🔥 ติดต่อกัน ' + missionStreak() + ' วัน' : ''}</p>` : ''}${quoteHtml(quoteOfDay(E.score))}<div class="mute">ใช้เวลา ${fmt(E.secs)} ${E.mode === 'mock' ? 'จาก ' + E.mins + ' นาที' : ''} · ตอบแล้ว ${Object.keys(E.ans).length}/${n} ข้อ</div>
@@ -546,7 +546,7 @@ const ACT = {
   },
   dailyRead() { const d = getDaily(); if (d.chapter) ACT.openLesson('ch:' + d.chapter); },
   dailyGoalSet(v) { store.set('dailyGoal', +v); render(true); },
-  nickEdit() { const n = prompt('ชื่อ/ชื่อเล่นที่จะปักบนอกเสื้อช็อป (ไม่เกิน 8 ตัวอักษร)', store.get('nick', 'น้องหมอ')); if (n !== null && n.trim()) { store.set('nick', n.trim().slice(0, 8)); render(true); } },
+  nickEdit() { const n = prompt('ชื่อ/ชื่อเล่นที่จะปักบนอกเสื้อกาวน์ (ไม่เกิน 8 ตัวอักษร)', store.get('nick', 'น้องหมอ')); if (n !== null && n.trim()) { store.set('nick', n.trim().slice(0, 8)); render(true); } },
   openLesson(v) { if (String(v).startsWith('ch:')) markRead(String(v).slice(3)); killSim(); LS = null; libTab = 'lessons'; libOpen = v; if (location.hash !== '#/library') location.hash = '#/library'; else render(); },
   lessonBack() { killSim(); libOpen = ''; LS = null; render(); },
   slideNext() { if (LS && LS.i < LS.slides.length - 1) { LS.i++; LS.dir = 'next'; render(true); window.scrollTo(0, 0); } },
@@ -615,13 +615,13 @@ function themeSheet(open) {
   el = document.createElement('div'); el.id = 'themesheet'; el.className = 'omr';
   el.setAttribute('data-a', 'themeClose');
   el.innerHTML = `<div><div class="row between"><h2 style="margin:0">${uic('palette', 22)} เลือกมหาวิทยาลัย</h2><button data-a="themeClose">ปิด</button></div>
-    <p class="mute" style="margin:6px 0">เลือกมหาวิทยาลัยที่อยากเข้า — แอปจะเปลี่ยนทั้งสี ตราสัญลักษณ์ ลวดลาย คติพจน์ และเสื้อช็อป พร้อมเปิดหน้ารู้จักมหาวิทยาลัยให้ดูว่าเด่นด้านอะไร มีคณะอะไร และคณะแพทย์ที่นั่นเกิดขึ้นได้อย่างไร (มหาวิทยาลัยที่มีคณะแพทย์ชั้นนำ)</p>
+    <p class="mute" style="margin:6px 0">เลือกมหาวิทยาลัยที่อยากเข้า — แอปจะเปลี่ยนทั้งสี ตราสัญลักษณ์ ลวดลาย คติพจน์ และเสื้อกาวน์ พร้อมเปิดหน้ารู้จักมหาวิทยาลัยให้ดูว่าเด่นด้านอะไร มีคณะอะไร และคณะแพทย์ที่นั่นเกิดขึ้นได้อย่างไร (มหาวิทยาลัยที่มีคณะแพทย์ชั้นนำ)</p>
     ${cur !== 'sixent' ? (() => { const t = THEMES.find(x => x.id === cur), u = uniOf(cur); return `<div class="uniinfo"><div class="shirtprev">${shirtSvg(store.get('nick', 'น้องหมอ'))}</div><div class="uniinfob"><div class="uniinfoh">${uniLogoHtml(cur, 34)}<b>${esc(t.n)}</b></div><div class="unimotto">“${esc(u.motto)}”</div>${uniFacts(cur)}<div class="row" style="margin-top:8px"><button class="pri" data-a="uniOpen" data-v="${cur}">ประวัติและคณะแพทย์ที่นี่</button></div></div></div>`; })() : ''}
     <div class="swgrid">${THEMES.filter(t => t.id === 'sixent' || t.e8).map(sw).join('')}</div>
     ${THEMES.some(t => t.id !== 'sixent' && !t.e8) ? `<p class="mute" style="margin:10px 0 4px">มหาวิทยาลัยอื่น</p><div class="swgrid">${THEMES.filter(t => t.id !== 'sixent' && !t.e8).map(sw).join('')}</div>` : ''}
     <p class="mute" style="margin:10px 0 4px">โหมดหน้าจอ</p><div class="chips">${[['auto', 'อัตโนมัติ'], ['light', '☀ สว่าง'], ['dark', '🌙 มืด']].map(([k, v]) => `<button class="chip ${sc === k ? 'on' : ''}" data-a="schemePick" data-v="${k}">${v}</button>`).join('')}</div>
     ${dressSheetExtra()}
-    <p class="mute" style="font-size:12px">คติพจน์ สี ต้นไม้ สัญลักษณ์ และประวัติคณะอ้างอิงจาก Wikipedia ไทยของแต่ละมหาวิทยาลัย ตราสัญลักษณ์ เฉดสี ลายพื้นหลัง และเสื้อช็อปเป็นภาพที่วาดเองตามสัญลักษณ์ ไม่ใช่ตราหรือเสื้อทางการ — อยากใช้ตราหรือเสื้อจริง วางรูปไว้ในโฟลเดอร์ icons/uni/ (ดูไฟล์ README ในโฟลเดอร์)</p></div>`;
+    <p class="mute" style="font-size:12px">คติพจน์ สี ต้นไม้ สัญลักษณ์ และประวัติคณะอ้างอิงจาก Wikipedia ไทยของแต่ละมหาวิทยาลัย ตราสัญลักษณ์ เฉดสี ลายพื้นหลัง และเสื้อกาวน์เป็นภาพที่วาดเองตามสัญลักษณ์ ไม่ใช่ตราหรือเสื้อทางการ — อยากใช้ตราหรือเสื้อจริง วางรูปไว้ในโฟลเดอร์ icons/uni/ (ดูไฟล์ README ในโฟลเดอร์)</p></div>`;
   document.body.appendChild(el);
 }
 matchMedia('(prefers-color-scheme:dark)').addEventListener('change', applyTheme);

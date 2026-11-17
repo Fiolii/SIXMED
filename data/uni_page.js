@@ -33,7 +33,7 @@ function uniPage(id) {
   if (!id) return;
   const t = THEMES.find(x => x.id === id), u = uniOf(id), I = UNIINFO[id]; if (!t || !I) return;
   const E = I.eng, fact = ([ic, k, v]) => v ? `<div class="unifact"><i>${uic(ic, 18)}</i><div><small>${k}</small><div>${esc(v)}</div></div></div>` : '';
-  const facts = [['calendar', 'ก่อตั้ง', I.founded], ['pin', 'ที่ตั้ง', I.place], ['flag', 'ใครเป็นผู้ริเริ่ม', I.founder], ['tree', 'ต้นไม้ประจำมหาวิทยาลัย', u.tree], ['crest', 'สัญลักษณ์', u.symbol], ['palette', 'สีประจำ', u.color]].map(fact).join('');
+  const facts = [['calendar', 'ก่อตั้งมหาวิทยาลัย', I.founded], ['pulse', 'โรงพยาบาลของคณะแพทย์', I.hosp], ['pin', 'ที่ตั้ง', I.place], ['flag', 'ผู้ริเริ่มคณะแพทย์', I.founder], ['tree', 'ต้นไม้ประจำมหาวิทยาลัย', u.tree], ['crest', 'สัญลักษณ์', u.symbol], ['palette', 'สีประจำ', u.color]].map(fact).join('');
   const nav = [['about', 'พงศาวดาร'], ['strong', 'เสาหลัก'], ['legend', 'บุคคลสำคัญ'], ['fac', 'คณะ'], ['eng', 'แพทย์ที่นี่'], ['tl', 'เส้นเวลา']];
   const L = (typeof UNILEG !== 'undefined' && UNILEG[id]) || [];
   const sk = (typeof UNISKIN !== 'undefined' && UNISKIN[id]) || null; if (sk) uniFont(sk);   // หน้าตาเฉพาะของแต่ละมหาวิทยาลัย (data/uni_skin.js)
@@ -41,7 +41,7 @@ function uniPage(id) {
   const deco = sk && typeof UNIDECO !== 'undefined' && UNIDECO[id] ? UNIDECO[id](I, E) : '';
   const stl = sk && sk.stat ? sk.stat : ['ก่อตั้งมหาวิทยาลัย', 'กำเนิดคณะแพทย์', 'ปีของแพทย์ที่นี่'];
   const bornN = parseInt(String(E.born).replace(/\D/g, '').slice(0, 4)), thNow = new Date().getFullYear() + 543, age = bornN ? thNow - bornN : 0;
-  const me = typeof avatarSvg === 'function' && CHAR_ON ? `<div class="uh-me"><div class="uh-meav">${avatarSvg({ top: 'uni:' + id }, { w: 92 })}</div><div class="uh-met"><b>ลองสวมเสื้อช็อปของที่นี่</b><small>ตัวละครของคุณจะใส่เสื้อช็อป ${esc(t.s || t.n)} ทันที</small><div class="row" style="gap:8px;margin-top:8px"><button class="pri" data-a="avWearUni" data-v="${id}">สวมเลย</button><button data-a="avOpen">ห้องแต่งตัว</button></div></div></div>` : '';
+  const me = typeof avatarSvg === 'function' && CHAR_ON ? `<div class="uh-me"><div class="uh-meav">${avatarSvg({ top: 'uni:' + id }, { w: 92 })}</div><div class="uh-met"><b>ลองสวมเสื้อกาวน์ของที่นี่</b><small>ตัวละครของคุณจะใส่เสื้อกาวน์ ${esc(t.s || t.n)} ทันที</small><div class="row" style="gap:8px;margin-top:8px"><button class="pri" data-a="avWearUni" data-v="${id}">สวมเลย</button><button data-a="avOpen">ห้องแต่งตัว</button></div></div></div>` : '';
   el = document.createElement('div'); el.id = 'unipage'; el.dataset.u = id; el.className = 'omr uniomr uh-omr' + (sk ? ' has-skin uk-' + id : ''); el.setAttribute('data-a', 'uniClose'); el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'รู้จัก ' + t.n);
   el.innerHTML = `<div>
     <div class="unitop"><b>${uic('book', 18)} ตำนานมหาวิทยาลัย</b><span><button data-a="uniPickOther">เปลี่ยนที่อื่น</button> <button class="pri" data-a="uniClose">ปิด</button></span></div>
@@ -56,7 +56,7 @@ function uniPage(id) {
       </header>
       <nav class="uninav">${nav.map(([k, v]) => `<button class="chip" data-a="uniGo" data-v="${k}">${v}</button>`).join('')}</nav>
 
-      <section id="us-about" class="rvs">${chapter(1, ...ct(0, 'พงศาวดารมหาวิทยาลัย', 'จุดเริ่มต้นและเรื่องราวที่ทำให้เกิดที่นี่'), sk)}<p class="uniprose lead">${esc(I.story)}</p><div class="unifacts">${facts}</div></section>
+      <section id="us-about" class="rvs">${chapter(1, ...ct(0, 'พงศาวดารการแพทย์', 'จุดเริ่มต้นของการแพทย์ที่นี่'), sk)}<p class="uniprose lead">${esc(I.story)}</p><div class="unifacts">${facts}</div></section>
 
       <section id="us-strong" class="rvs">${chapter(2, ...ct(1, 'เสาหลักแห่งความโดดเด่น', 'สิ่งที่ทำให้มหาวิทยาลัยนี้ไม่เหมือนที่ไหน'), sk)}<div class="unistrong">${I.strong.map((s, i) => `<div class="unis"><span class="n">${thNum(i + 1)}</span><b>${esc(s[0])}</b><p>${esc(s[1])}</p></div>`).join('')}</div></section>
 
@@ -73,7 +73,7 @@ function uniPage(id) {
       <section id="us-tl" class="rvs">${chapter(L.length ? 6 : 5, ...ct(5, 'ลำดับกาลเวลา', 'จากวันแรกถึงปัจจุบัน'), sk)}<ol class="untl2">${E.timeline.map(([y, tx], i) => `<li style="--i:${i}"><span class="tly">${thNum(String(y).replace('พ.ศ. ', ''))}</span><span class="tlt">${esc(tx)}</span></li>`).join('')}</ol></section>
 
       <section class="uniend">${sk ? sk.orn : ORN}<div class="row" style="gap:8px;justify-content:center;flex-wrap:wrap"><a class="btn" href="${esc(I.web)}" target="_blank" rel="noopener">${uic('link', 16)} เว็บคณะแพทย์</a><a class="btn" href="${esc(I.ewiki)}" target="_blank" rel="noopener">ประวัติคณะ (Wikipedia)</a><a class="btn" href="${esc(I.wiki)}" target="_blank" rel="noopener">เกี่ยวกับมหาวิทยาลัย</a></div>
-        <p class="mute" style="font-size:12px;margin-top:10px">${uic('info', 14)} ข้อมูลสรุปจาก Wikipedia ภาษาไทยของมหาวิทยาลัยและคณะ (ตรวจเมื่อ พ.ย. 2569) บางหัวข้อในหน้าต้นทางยังไม่มีแหล่งอ้างอิง ตัวเลขอันดับและจำนวนหลักสูตรเปลี่ยนได้ ก่อนตัดสินใจสมัครควรเช็กกับเว็บคณะและ mytcas.com อีกครั้ง • ตราและเสื้อช็อปในแอปเป็นภาพที่วาดเอง ไม่ใช่ตราทางการ</p></section>
+        <p class="mute" style="font-size:12px;margin-top:10px">${uic('info', 14)} ข้อมูลสรุปจาก Wikipedia ภาษาไทยของมหาวิทยาลัยและคณะ (ตรวจเมื่อ พ.ย. 2569) บางหัวข้อในหน้าต้นทางยังไม่มีแหล่งอ้างอิง ตัวเลขอันดับและจำนวนหลักสูตรเปลี่ยนได้ ก่อนตัดสินใจสมัครควรเช็กกับเว็บคณะและ mytcas.com อีกครั้ง • ตราและเสื้อกาวน์ในแอปเป็นภาพที่วาดเอง ไม่ใช่ตราทางการ</p></section>
     </div></div>`;
   document.body.appendChild(el); document.body.classList.add('uni-open');
   if (matchMedia('(prefers-reduced-motion:reduce)').matches) el.querySelectorAll('animate,animateTransform,animateMotion').forEach(a => a.remove());   // ฉาก SVG ที่ใช้ SMIL ไม่ขยับเมื่อผู้ใช้ตั้งค่าลดการเคลื่อนไหว

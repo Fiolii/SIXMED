@@ -1,6 +1,6 @@
-// อัตลักษณ์ของแต่ละมหาวิทยาลัย: คติพจน์ ต้นไม้/ดอกไม้ สัญลักษณ์ ลวดลายพื้นหลัง และทรงเสื้อช็อป
+// อัตลักษณ์ของแต่ละมหาวิทยาลัย: คติพจน์ ต้นไม้/ดอกไม้ สัญลักษณ์ ลวดลายพื้นหลัง และทรงเสื้อกาวน์
 // ข้อมูลคติพจน์/สี/ต้นไม้/สัญลักษณ์อ้างอิงจากกล่องข้อมูลของ Wikipedia ภาษาไทยของแต่ละมหาวิทยาลัย
-// ตราสัญลักษณ์ (data/uni_art.js) เสื้อช็อปและลวดลายทั้งหมดวาดขึ้นเอง ไม่ใช่ของทางการ — ถ้าอยากใช้รูปจริง วางไฟล์ไว้ที่ icons/uni/ (ดู README ในโฟลเดอร์นั้น)
+// ตราสัญลักษณ์ (data/uni_art.js) เสื้อกาวน์และลวดลายทั้งหมดวาดขึ้นเอง ไม่ใช่ของทางการ — ถ้าอยากใช้รูปจริง วางไฟล์ไว้ที่ icons/uni/ (ดู README ในโฟลเดอร์นั้น)
 const UNI = {
   sixent: { motto: 'ติวให้พร้อม แล้วไปเป็นวิศวกรในฝัน', pat: 'gear', shirt: { base: null, btn: '#f4f4f4', pocket: 'flat', low: 2, emb: 'pocket', t1: '#ffffff', l1: 'SIXMED', l2: 'ENGINEERING' } },
   chula: { motto: 'ความรู้คู่คุณธรรม', tree: 'ต้นจามจุรี', symbol: 'พระเกี้ยว', color: 'สีชมพู', pat: 'leaf', shirt: { base: '#5d7390', btn: '#4b5f7a', pocket: 'flat', low: 2, emb: 'pocket', t1: '#c8283a', l1: 'FACULTY OF ENGINEERING', l2: 'CHULALONGKORN UNIVERSITY' } },
@@ -52,12 +52,12 @@ function uniProbe(id) {
   });
 }
 
-/* ---------- เสื้อช็อปแบบวาดเอง ตามอัตลักษณ์ของแต่ละมหาวิทยาลัย ---------- */
+/* ---------- เสื้อกาวน์แบบวาดเอง ตามอัตลักษณ์ของแต่ละมหาวิทยาลัย ---------- */
 function uniShirt(name, uid, opts) {
   opts = opts || {};
   const id = uid || curThemeId(), u = uniOf(id), S = Object.assign({}, u.shirt, opts.gold ? { t1: '#f6d36b', t2: '#f6d36b', ring: '#f6d36b', btn: '#f0cd6a', stitch: 'rgba(246,211,107,.8)' } : {}), nm = esc(String(name || 'น้องวิศวะ').slice(0, 8)), sid = ++UEC;
-  if (!opts.paper && UNIIMG.shirt[id]) return `<div class="shirtimg"><img src="${UNIIMG.shirt[id]}" alt="เสื้อช็อป ${esc(id)}"><span class="shirtnm">${nm}</span></div>`;
-  /* เสื้อช็อปวิศวะทรงเชิ้ตคอเปิด (คอแคมป์) — สี ตำแหน่งปัก กระเป๋า และสีด้ายอ้างอิงจากรูปเสื้อจริงของแต่ละมหาวิทยาลัย (ภาพที่วาดเอง ไม่ใช่รูปถ่าย) */
+  if (!opts.paper && UNIIMG.shirt[id]) return `<div class="shirtimg"><img src="${UNIIMG.shirt[id]}" alt="เสื้อกาวน์ ${esc(id)}"><span class="shirtnm">${nm}</span></div>`;
+  /* เสื้อกาวน์ทรงเชิ้ตคอเปิด (คอแคมป์) — สี ตำแหน่งปัก กระเป๋า และสีด้ายอ้างอิงจากรูปเสื้อจริงของแต่ละมหาวิทยาลัย (ภาพที่วาดเอง ไม่ใช่รูปถ่าย) */
   const base = S.base || 'var(--pri)', hx = /^#[0-9a-f]{6}$/i.test(S.base || '') ? parseInt(S.base.slice(1), 16) : 0x4f46e5;
   const lum = (0.299 * (hx >> 16) + 0.587 * ((hx >> 8) & 255) + 0.114 * (hx & 255)) / 255, dk = lum < 0.42;
   const ln = dk ? 'rgba(255,255,255,.22)' : 'rgba(0,0,0,.32)', st = S.stitch || (dk ? 'rgba(255,255,255,.3)' : 'rgba(0,0,0,.3)');
@@ -79,7 +79,7 @@ function uniShirt(name, uid, opts) {
   const sleeve = S.sleeve ? `<g transform="rotate(-22 12 42)"><circle cx="12" cy="42" r="4.800" fill="rgba(0,0,0,.22)"/>${uniEmblem(id, 8, { at: [8, 38] })}</g>` : '';
   const goldTrim = `<g fill="none" stroke="#f6d36b" stroke-linejoin="round"><path d="M31 14.500L46 5L64 33L60 46ZM89 14.500L74 5L56 33L60 46Z" stroke-width="1.200"/><path d="M4 50L24 60M116 50L96 60" stroke-width="2"/><path d="M60 46V118" stroke-width=".9" stroke-dasharray="2 1.500"/></g><g fill="#fff3c4">${[[20, 30], [100, 34], [44, 100], [84, 104], [60, 8]].map(p => `<path d="M${p[0]} ${p[1] - 3}L${p[0] + 1} ${p[1] - 1}L${p[0] + 3} ${p[1]}L${p[0] + 1} ${p[1] + 1}L${p[0]} ${p[1] + 3}L${p[0] - 1} ${p[1] + 1}L${p[0] - 3} ${p[1]}L${p[0] - 1} ${p[1] - 1}Z"/>`).join('')}</g>`;
   const sheen = dk ? '.035' : '.1';
-  return `<svg class="shirt" viewBox="0 0 120 130" role="img" aria-label="เสื้อช็อปของ ${nm} (${esc(u.symbol || 'SIXMED')})">
+  return `<svg class="shirt" viewBox="0 0 120 130" role="img" aria-label="เสื้อกาวน์ของ ${nm} (${esc(u.symbol || 'SIXMED')})">
     <defs><linearGradient id="sh${sid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".36"/></linearGradient>
       <linearGradient id="sv${sid}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".26"/><stop offset=".22" stop-color="#000" stop-opacity="0"/><stop offset=".78" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient>
       <pattern id="sw${sid}" width="3" height="3" patternUnits="userSpaceOnUse"><path d="M0 3L3 0" stroke="rgba(255,255,255,${sheen})" stroke-width=".6"/><path d="M0 0L3 3" stroke="rgba(0,0,0,.05)" stroke-width=".5"/></pattern>
