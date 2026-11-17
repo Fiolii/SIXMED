@@ -120,7 +120,7 @@ function tick() {
   if (E && !E.done) {
     const left = E.mode === 'mock' ? Math.ceil((E.endAt - Date.now()) / 1000) : null;
     const el = $('#et'); if (el) { el.textContent = E.mode === 'mock' ? fmt(left) : fmt((Date.now() - E.t0) / 1000); el.classList.toggle('low', left !== null && left <= 300); }
-    if (left !== null && left <= 0) submitExam(true);
+    if (left !== null && left <= 0) { if (E.sec && !secLast()) mockNextSec(true); else submitExam(true); }
   }
   document.title = T.running ? fmt(T.mode === 'sw' ? tElapsed() : T.remain) + ' · SIXMED' : 'SIXMED – ติว TPAT1 กสพท / A-Level';
 }
@@ -130,7 +130,7 @@ setInterval(tick, 500);
 let E = null;      // exam state
 const X = { mode: 'practice', group: '', subject: '', topic: '', src: 'all', n: 10, shuffle: true };
 let libTab = 'lessons', libOpen = '';
-const routes = { '': viewToday, exam: viewPractice, stats: viewProgress, timer: viewFocus, cal: viewCalHub, rank: viewRank, library: viewLibHub, english: viewEnglish, me: viewMe };
+const routes = { '': viewToday, exam: viewPractice, stats: viewProgress, timer: viewFocus, cal: viewCalHub, rank: viewRank, score: viewScore, library: viewLibHub, english: viewEnglish, me: viewMe };
 function render(keepScroll) {
   const r = (location.hash.replace(/^#\/?/, '') || '').split('/')[0];
   document.querySelectorAll('[data-r]').forEach(a => a.classList.toggle('on', a.dataset.r === hubPrimary(r)));
@@ -202,7 +202,8 @@ const PRESETS = [
   { t: 'TPAT1 จริยธรรมทางการแพทย์', f: q => q.topic === 'จริยธรรมทางการแพทย์' },
   { t: 'TPAT1 ความคิดเชื่อมโยง', f: q => q.topic === 'ความคิดเชื่อมโยง' },
   { t: 'A-Level คณิตศาสตร์', f: q => q.subject === 'คณิต' },
-  { t: 'A-Level วิทย์ (ฟิสิกส์ เคมี ชีว)', f: q => q.group === 'alevel' && q.subject !== 'คณิต' },
+  { t: 'A-Level วิทย์ (ฟิสิกส์ เคมี ชีว)', f: q => q.group === 'alevel' && ['ฟิสิกส์', 'เคมี', 'ชีววิทยา'].includes(q.subject) },
+  { t: 'A-Level ไทย สังคม อังกฤษ', f: q => q.group === 'alevel' && ['ภาษาไทย', 'สังคมศึกษา', 'ภาษาอังกฤษ'].includes(q.subject) },
 ];
 function pool() {
   const wrong = new Set(attempts.filter(a => !a.ok).map(a => a.qid)), seen = new Set(attempts.map(a => a.qid));
@@ -251,7 +252,7 @@ function examPaper() {
   const dir = E.dir; E.dir = '';
   const answered = Object.keys(E.ans).length;
   return `<div class="exam">
-  <div class="ebar"><div class="row between"><div><b>${esc(E.label)}</b> <span class="tag">${mock ? 'สอบจำลอง' : 'ฝึกทำ'}</span></div>
+  <div class="ebar"><div class="row between"><div><b>${esc(E.label)}</b> <span class="tag">${mock ? 'สอบจำลอง' : 'ฝึกทำ'}</span>${secTag()}</div>
     <div class="row"><span class="eclock" id="et">0:00</span><button data-a="quit" aria-label="ออก">✕</button></div></div>
     <div class="prog"><i style="width:${(E.i + 1) / n * 100}%"></i></div></div>
   <div class="stage"><article class="sheet ${dir}" aria-label="ข้อ ${E.i + 1}">
@@ -267,24 +268,24 @@ function examPaper() {
     ${shown ? `<div class="exp"><b>${isRight(q, picked) ? '✅ ถูกต้อง!' : '❌ เฉลย: ' + rightTxt(q)}</b><div style="margin-top:6px">${nl(q.exp || '')}</div>${whyHtml(q)}${q.tip ? `<div class="tip">💡 ${rt(q.tip)}</div>` : ''}
       ${lessonFor(q) ? `<div style="margin-top:8px"><a href="#/library" data-a="openLesson" data-v="${esc(q.topic)}" onclick="return false">📚 อ่านบทเรียน: ${esc(q.topic)}</a></div>` : ''}</div>` : ''}
   </article></div>
-  <div class="efoot"><div class="row"><button data-a="prev" ${E.i === 0 ? 'disabled' : ''} aria-label="ข้อก่อนหน้า">◀</button>
+  <div class="efoot"><div class="row"><button data-a="prev" ${E.i === secA() ? 'disabled' : ''} aria-label="ข้อก่อนหน้า">◀</button>
     <button class="grow" data-a="omr">📋 ตอบแล้ว ${answered}/${n}</button>
     ${mock ? `<button data-a="flag" aria-label="ปักธง">${E.flag[E.i] ? '⚑' : '⚐'}</button>` : `<button data-a="mark" data-v="${esc(q.id)}" aria-label="บุ๊กมาร์ก">${marks.includes(q.id) ? '★' : '☆'}</button>`}
-    ${E.i === n - 1 ? `<button class="pri" data-a="finish">ส่ง ✓</button>` : `<button class="pri" data-a="next" aria-label="ข้อถัดไป">▶</button>`}</div></div>
+    ${E.i === secB() - 1 ? (secLast() ? `<button class="pri" data-a="finish">ส่ง ✓</button>` : `<button class="pri" data-a="secNext">ส่งส่วนนี้ ✓</button>`) : `<button class="pri" data-a="next" aria-label="ข้อถัดไป">▶</button>`}</div></div>
   ${E.omr ? omrSheet() : ''}</div>`;
 }
 function omrSheet() {
   const n = E.list.length;
   return `<div class="omr" data-a="omrclose"><div><div class="row between"><h2 style="margin:0">กระดาษคำตอบ</h2><button data-a="omrclose">ปิด</button></div>
-  <div class="navg">${E.list.map((_, i) => `<button class="${E.ans[i] != null ? 'done' : ''} ${E.flag[i] ? 'flag' : ''} ${i === E.i ? 'cur' : ''}" data-a="go" data-v="${i}">${i + 1}</button>`).join('')}</div>
+  <div class="navg">${E.list.map((_, i) => i < secA() || i >= secB() ? '' : `<button class="${E.ans[i] != null ? 'done' : ''} ${E.flag[i] ? 'flag' : ''} ${i === E.i ? 'cur' : ''}" data-a="go" data-v="${i}">${i + 1}</button>`).join('')}</div>
   <div class="legend"><span>● ตอบแล้ว</span><span>○ ยังไม่ตอบ</span><span>⚑ ปักธง (วงเหลือง)</span></div>
-  <div style="margin-top:12px"><button class="pri" data-a="finish" style="width:100%">${E.mode === 'mock' ? 'ส่งข้อสอบ' : 'จบและดูผล'}</button></div></div></div>`;
+  <div style="margin-top:12px">${secLast() ? `<button class="pri" data-a="finish" style="width:100%">${E.mode === 'mock' ? 'ส่งข้อสอบ' : 'จบและดูผล'}</button>` : `<button class="pri" data-a="secNext" style="width:100%">ส่งส่วนนี้แล้วไปส่วนถัดไป</button>`}</div></div></div>`;
 }
 function leave() { const now = Date.now(); E.qs[E.i] = (E.qs[E.i] || 0) + (now - E.tq) / 1000; E.tq = now; }
-function goTo(i, dir) { if (i < 0 || i >= E.list.length) return; leave(); E.dir = dir || (i > E.i ? 'next' : 'prev'); E.i = i; E.omr = false; render(true); }
+function goTo(i, dir) { if (i < 0 || i >= E.list.length || (E.sec && (i < secA() || i >= secB()))) return; leave(); E.dir = dir || (i > E.i ? 'next' : 'prev'); E.i = i; E.omr = false; render(true); }
 function submitExam(auto) {
   if (!E || E.done) return;
-  leave();
+  leave(); if (E.sec) { if (auto) { E.sec.parts[E.sec.cur].auto = true; E.sec.parts[E.sec.cur].used = E.sec.parts[E.sec.cur].mins * 60; } secClose(); }
   const n = E.list.length, mock = E.mode === 'mock';
   let score = 0;
   E.list.forEach((q, i) => {
@@ -305,6 +306,7 @@ function examResult() {
   return `<h1>ผลการสอบ ${E.auto ? '<span class="tag warn">หมดเวลา ส่งอัตโนมัติ</span>' : ''}</h1>
   <div class="card ctr">${ring(0, 170, E.score + '/' + n, p + '%')}<p style="margin:10px 0 2px"><b>${msg}</b></p>${E.daily ? `<p class="mute" style="margin:2px 0">ภารกิจรายวัน: ทำแล้ว ${Object.keys(getDaily().results).length}/${getDaily().ids.length} ข้อ${missionStreak() ? ' · 🔥 ติดต่อกัน ' + missionStreak() + ' วัน' : ''}</p>` : ''}${quoteHtml(quoteOfDay(E.score))}<div class="mute">ใช้เวลา ${fmt(E.secs)} ${E.mode === 'mock' ? 'จาก ' + E.mins + ' นาที' : ''} · ตอบแล้ว ${Object.keys(E.ans).length}/${n} ข้อ</div>
     <div class="row" style="justify-content:center;margin-top:12px"><button class="pri" data-a="resetE">ทำชุดใหม่</button><a class="btn" href="#/stats">ดูสถิติ</a></div></div>
+  ${E.sec ? tpat1MockResult() : ''}
   ${E.coin ? coinCard(E.coin) : ''}
   <div class="card"><h2>รายหัวข้อ</h2><div class="tbl"><table>${Object.entries(by).map(([t, v]) => `<tr><td>${esc(t)}</td><td>${v.ok}/${v.n}</td><td style="width:40%"><div class="bar ${pct(v.ok, v.n) >= 60 ? 'g' : 'r'}"><i style="width:${pct(v.ok, v.n)}%"></i></div></td></tr>`).join('')}</table></div></div>
   <div class="card"><h2>ทบทวนทีละข้อ</h2>${E.list.map((q, i) => { const mine = E.ans[i], ok = isRight(q, mine); return `<div class="rv"><div class="row between"><b>ข้อ ${i + 1}</b><span class="tag ${ok ? 'ok' : 'bad'}">${mine == null ? 'ไม่ได้ตอบ' : ok ? 'ถูก' : 'ผิด'}</span></div>
@@ -494,7 +496,7 @@ function lessonView(k) {
 
 /* ====================== actions ====================== */
 const ACT = {
-  ...ADMIN_ACT, ...ACH_ACT, ...ART_ACT, ...CHAR_ACT, ...SOC_ACT, ...BRANCH_ACT, ...YPT_ACT, ...CAL_ACT, ...DQ_ACT, ...HUB_ACT, ...PROF_ACT, ...ENG_ACT, ...ACCT_ACT,
+  ...ADMIN_ACT, ...ACH_ACT, ...ART_ACT, ...CHAR_ACT, ...SOC_ACT, ...BRANCH_ACT, ...YPT_ACT, ...CAL_ACT, ...DQ_ACT, ...HUB_ACT, ...PROF_ACT, ...ENG_ACT, ...ACCT_ACT, ...MED_ACT,
   setDate() { examDate = val('ed'); save(); render(true); },
   setExam(v) { examDate = v; save(); if ((location.hash || '#/') === '#/') render(true); else alert('ตั้งวันนับถอยหลังเป็น ' + v + ' แล้ว (ดูที่หน้าแรก)'); },
   themeOpen() { uniPage(null); themeSheet(true); }, themeClose() { themeSheet(false); },
