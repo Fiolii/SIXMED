@@ -427,7 +427,7 @@ function refsHtml(refs) {
   return `<h3>🇹🇭 แหล่งภาษาไทย</h3><div class="refs">${th.map(a).join('')}</div>${en.length ? `<h3>🌐 ภาษาอังกฤษ (ถ้าอยากอ่านเพิ่ม)</h3><div class="refs">${en.map(a).join('')}</div>` : ''}`;
 }
 function courseTree() {
-  const groups = [['alevel', 'A-Level'], ['tpat3', 'TPAT3'], ['tgat', 'TGAT']];
+  const groups = [['tpat1', 'TPAT1 วิชาเฉพาะ กสพท'], ['alevel', 'A-Level']];
   return groups.map(([g, name]) => {
     const chs = COURSE.filter(c => c.group === g); if (!chs.length) return '';
     const subs = uniq(chs.map(c => c.subject));
