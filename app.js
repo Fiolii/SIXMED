@@ -202,7 +202,9 @@ const PRESETS = [
   { t: 'TPAT1 จริยธรรมทางการแพทย์', f: q => q.topic === 'จริยธรรมทางการแพทย์' },
   { t: 'TPAT1 ความคิดเชื่อมโยง', f: q => q.topic === 'ความคิดเชื่อมโยง' },
   { t: 'A-Level คณิตศาสตร์', f: q => q.subject === 'คณิต' },
-  { t: 'A-Level วิทย์ (ฟิสิกส์ เคมี ชีว)', f: q => q.group === 'alevel' && ['ฟิสิกส์', 'เคมี', 'ชีววิทยา'].includes(q.subject) },
+  { t: 'A-Level ฟิสิกส์', f: q => q.group === 'alevel' && q.subject === 'ฟิสิกส์' },
+  { t: 'A-Level เคมี', f: q => q.group === 'alevel' && q.subject === 'เคมี' },
+  { t: 'A-Level ชีววิทยา', f: q => q.group === 'alevel' && q.subject === 'ชีววิทยา' },
   { t: 'A-Level ไทย สังคม อังกฤษ', f: q => q.group === 'alevel' && ['ภาษาไทย', 'สังคมศึกษา', 'ภาษาอังกฤษ'].includes(q.subject) },
 ];
 function pool() {
