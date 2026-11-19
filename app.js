@@ -205,7 +205,9 @@ const PRESETS = [
   { t: 'A-Level ฟิสิกส์', f: q => q.group === 'alevel' && q.subject === 'ฟิสิกส์' },
   { t: 'A-Level เคมี', f: q => q.group === 'alevel' && q.subject === 'เคมี' },
   { t: 'A-Level ชีววิทยา', f: q => q.group === 'alevel' && q.subject === 'ชีววิทยา' },
-  { t: 'A-Level ไทย สังคม อังกฤษ', f: q => q.group === 'alevel' && ['ภาษาไทย', 'สังคมศึกษา', 'ภาษาอังกฤษ'].includes(q.subject) },
+  { t: 'A-Level ภาษาไทย', f: q => q.group === 'alevel' && q.subject === 'ภาษาไทย' },
+  { t: 'A-Level สังคมศึกษา', f: q => q.group === 'alevel' && q.subject === 'สังคมศึกษา' },
+  { t: 'A-Level ภาษาอังกฤษ', f: q => q.group === 'alevel' && q.subject === 'ภาษาอังกฤษ' },
 ];
 function pool() {
   const wrong = new Set(attempts.filter(a => !a.ok).map(a => a.qid)), seen = new Set(attempts.map(a => a.qid));
